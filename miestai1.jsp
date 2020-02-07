@@ -15,9 +15,11 @@
 	String dbName = "keliones";
 	String userId = "root";
 	String password = "";
-	String[] lent_miestu = { "id_miesto", "pav", "gyv_sk", "plotas", "platuma", "ilguma", "valstybe"  };
-	//String[] lauk_miesto = new String [ lent_miestu.length ];		
-	Crud lent_miestai = new Crud ( "miestai", lent_laukai );
+	String[] lent_miestu = { "id", "pav", "gyv_sk", "plotas", "platuma", "ilguma" };
+	String[] lent_marsrutu_miestu = { "id_miesto" };
+	String[] lauk_miesto = new String [ lent_miestu.length ];		
+	Crud lent_miestai = new Crud ( "miestai", lent_miestu );
+	Crud crud_marsrutu_miestu = new Crud ( "marsrutai_miestai", lent_marsrutu_miestu );
 %>
 <html>
 <%
@@ -69,6 +71,7 @@
 	
 		connection = DriverManager.getConnection ( connectionUrl + dbName + "?useUnicode=yes&characterEncoding=UTF-8", userId, password );
 		String add; 
+		String sql_ins;
 	
 		if ( ( ( add = request.getParameter("add")  ) != null ) && add.equals ( "papildyti" ) ) {
 		
@@ -81,21 +84,7 @@
 		
 			if  (  id_miesto.equals ( "0" ) ) {																																	// Miestai miestas = new Miestai ( lent_miestu );
 																																					// miestas.takeFromParams ( request )
-				String sql_ins = "";
-
-				
-				for ( int i = 1; i < lent_miestu.length - 1; i++ ) {
-				
-					sql_ins += comma  + "'" + lauk_miesto [ i ] + "'";
-					comma = ",";																													// sql_ins = sql_ins + "'" + Miestai.value + "'";
-				}
-				
-				sql_ins = 
-					"INSERT INTO `miestai`"
-					+ " ( `pav`, `gyv_sk`, `plotas`, `platuma`, `ilguma` ) "
-					+ " VALUES ( "			
-					+ sql_ins
-					+ " )";
+				sql_ins = lent_miestai.insert(lauk_miesto);
 
 				out.println ( sql_ins );
 
@@ -104,15 +93,10 @@
 				
 			} else {
 			
-				String sql_upd = " UPDATE `miestai` SET\n";				
-				
-				for ( int i = 1; i < lent_miestu.length - 1; i++ ) {
-				
-					sql_upd += comma  + "`" + lent_miestu [ i ]  + "`='" + lauk_miesto [ i ] + "'\n";
-					comma = ",";																													// sql_ins = sql_ins + "'" + Miestai.value + "'";
-				}
-				sql_upd += "WHERE `id`=" + id_miesto;
-				
+				String sql_upd;
+				String salyga = " `id`=" + id_miesto;
+				sql_upd = lent_miestai.update(lauk_miesto, salyga);
+								
 				out.println ( sql_upd );
 
 				statement_change = connection.createStatement();
@@ -184,20 +168,19 @@
 				alert ( "ops " );			
 <%		
 	try {
-		String del;	
+		String del;
+		String where_salyga;
 	
 		if ( ( ( del = request.getParameter("del")  ) != null ) && del.equals ( "del1rec" ) ) {
 %>
 			alert( "opa" );
 <%
-			id_miesto = request.getParameter( "m_del" );
 		
-			String sql_fkey ="SELECT "
-					+ " `id_miesto` "
-				+ " FROM" 
-					+ " `marsrutai_miestai` "  
-				+ " WHERE "
-					+ "`id_miesto` =" + id_miesto;
+			id_miesto = request.getParameter( "m_del" );
+			where_salyga = "`id_miesto` = '" + id_miesto + "'";
+			
+			String sql_fkey = crud_marsrutu_miestu.select(where_salyga);
+			
 			Statement statement_check = connection.createStatement();					
 			resultSet = statement_check.executeQuery(sql_fkey);
 			
@@ -210,15 +193,8 @@
 				alert ( "ups " );
 <%				
 			} else {
-			
-				String sql_delete ="DELETE"
-
-						+ " FROM" 
-							+ " `miestai`" ;
-				sql_delete += " WHERE `id`=" + id_miesto;
-
-				out.println ( sql_delete );
-
+				
+				String sql_delete = lent_miestai.delete (id_miesto);
 				statement_change = connection.createStatement();
 				resultSetChange = statement_change.executeUpdate(sql_delete);
 			}
@@ -309,24 +285,13 @@
 </tr>
 <%
 	try {
-	
+		//id_miesto = request.getParameter( "m_del" );
 		statement_take = connection.createStatement();		
-		String sql ="SELECT"
-					+ "`id`"
-					+ ", `pav`" 
-					+ ", `gyv_sk`"
-					+ ", `plotas`"
-					+ ", `platuma`"
-					+ ", `ilguma`"
-					+ ", '" + salis + "' AS `valstybe`"
-				+ "FROM" 
-					+ "`miestai`"  
-				+ "WHERE"
-					+ "1";
-
+		String sql = lent_miestai.select ();
+		out.println(sql);
 		//String sql ="SELECT * FROM `miestai`  WHERE 1";
 		resultSet = statement_take.executeQuery(sql);
-		
+
 
 		 
 		while( resultSet.next() ){

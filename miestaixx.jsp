@@ -8,15 +8,16 @@
 <% // @page import="classx.Crud" %>
 <% // @ include file="Crud.java" %>
 <%@page language="java" import="classx.Crud"%>
-<%
+<% 
 
 	String driverName = "com.mysql.jdbc.Driver";
 	String connectionUrl = "jdbc:mysql://localhost:3306/";
 	String dbName = "keliones";
 	String userId = "root";
 	String password = "";
-	String[] lent_miestu = { "id_miesto", "pav", "gyv_sk", "plotas", "platuma", "ilguma", "valstybe"  };
-	//String[] lauk_miesto = new String [ lent_miestu.length ];		
+	
+	String[] lent_laukai = { "id_miesto", "pav", "gyv_sk", "plotas", "platuma", "ilguma", "valstybe"  };
+
 	Crud lent_miestai = new Crud ( "miestai", lent_laukai );
 %>
 <html>
@@ -149,17 +150,6 @@
 				}
 			}
 			
-			function iValyma () {
-			
-<%
-				for ( int i=0; i<lent_miestu.length; i++ ) {
-%>																																								
-					document.getElementById( '<%= lent_miestu [ i ]  %>' ).value =  "";
-<%	
-				}
-%>
-			}
-			
 			function iTrinima ( id_rec ) {
 			
 				mygtukasEdit = document.getElementById ( 'toEdit_' + id_rec );
@@ -251,25 +241,25 @@
 		<tr>
 			<th>Gyv. sk.</th>
 			<td>
-				<input id="gyv_sk" type="number" step="1" min="0" max="1000000" name="gyv_sk" value="1">
+				<input id="gyv_sk" type="number" name="gyv_sk" value="1">
 			</td>
 		</tr>
 		<tr>
 			<th>Plotas</th>
 			<td>
-				<input id="plotas" type="number" step="0.01" min="0" max="1000000" name="plotas" value="1">
+				<input id="plotas" type="number" name="plotas" value="1">
 			</td>
 		</tr>
 		<tr>
 			<th>Platuma</th>
 			<td>
-				<input id="platuma" type="number" step="0.0001" min="-90"  max="90" name="platuma" value="0">
+				<input id="platuma" type="number" min="-90"  max="90" name="platuma" value="0">
 			</td>
 		</tr>
 		<tr>
 			<th>Ilguma</th>
 			<td>
-				<input id="ilguma" type="number" step="0.0001" min="0" max="180" name="ilguma" value="0">
+				<input id="ilguma" type="number" min="0" max="180" name="ilguma" value="0">
 			</td>
 		</tr>
 		<tr>
@@ -282,7 +272,7 @@
 			<td>
 			</td>
 			<td>
-				<input type="button" name="clear" value="valyti" onClick = "iValyma()"> 
+				<input type="button" name="clear" value="valyti"> 
 				<input type="submit" name="add" value="papildyti">
 			</td>
 		</tr>
