@@ -42,7 +42,7 @@
 		
 	} catch(Exception e) {}
 	
-	String id_miesto;
+	
 %>	
 		<meta charset="utf-8">
 		<style>
@@ -66,12 +66,13 @@
 				background-color: #DEB887;			
 			}
 		</style>
-<%		
+<%		String id_miesto;
 	try { 
 	
 		connection = DriverManager.getConnection ( connectionUrl + dbName + "?useUnicode=yes&characterEncoding=UTF-8", userId, password );
 		String add; 
 		String sql_ins;
+
 	
 		if ( ( ( add = request.getParameter("add")  ) != null ) && add.equals ( "papildyti" ) ) {
 		
@@ -81,9 +82,10 @@
 			}
 			String comma = "";
 			id_miesto = request.getParameter( "id_miesto" );
-		
+
 			if  (  id_miesto.equals ( "0" ) ) {																																	// Miestai miestas = new Miestai ( lent_miestu );
-																																					// miestas.takeFromParams ( request )
+				
+													// miestas.takeFromParams ( request )
 				sql_ins = lent_miestai.insert(lauk_miesto);
 
 				out.println ( sql_ins );
@@ -92,7 +94,7 @@
 				resultSetChange = statement_change.executeUpdate(sql_ins);
 				
 			} else {
-			
+				lauk_miesto[0] = id_miesto;
 				String sql_upd;
 				String salyga = " `id`=" + id_miesto;
 				sql_upd = lent_miestai.update(lauk_miesto, salyga);
@@ -136,7 +138,7 @@
 			function iValyma () {
 			
 <%
-				for ( int i=0; i<lent_miestu.length; i++ ) {
+				for ( int i=1; i<lent_miestu.length; i++ ) {
 %>																																								
 					document.getElementById( '<%= lent_miestu [ i ]  %>' ).value =  "";
 <%	

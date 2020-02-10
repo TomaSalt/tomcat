@@ -112,15 +112,15 @@
 			String sql_insert = "INSERT INTO " + " `" + lent + "` ( ";
 			String comma = "";
 			
-			for ( int i = 0; i < laukai.length; i++ ) {
+			for ( int i = 1; i < laukai.length; i++ ) {
 				
-				sql_insert += comma  + " `" + laukai [ i ] + " `";
+				sql_insert += comma  + " `" + laukai [ i ] + "` ";
 				comma = ",";																													// sql_ins = sql_ins + "'" + Miestai.value + "'";
 			}
 			
 			comma = "";
 			sql_insert += ") VALUES ( ";
-			for ( int i = 0; i < reiksmes.length; i++ ) {
+			for ( int i = 1; i < reiksmes.length; i++ ) {
 
 				sql_insert += comma + " '" + reiksmes[i] + "' ";
 				comma = ",";	
@@ -131,16 +131,16 @@
 			return sql_insert;
 		}
 		
-		public String update(String[] values, String salyga) {
+		public String update(String[]values, String salyga) {
 			
-			String[] reiksmes = values;
+			String[]reiksmes = values;
 			sal = salyga;
 			String sql_update = "UPDATE" + " `" + lent + "` SET\n ";
 			String comma = "";
 			
 			for ( int i = 0; i < laukai.length; i++ ) {
 				
-				sql_update += comma  + " `" + laukai [ i ] + " `='" + reiksmes [ i ] + "'\n";
+				sql_update += comma  + " `" + laukai [ i ] + "`='" + reiksmes [ i ] + "'\n";
 				comma = ",";																													// sql_ins = sql_ins + "'" + Miestai.value + "'";
 			}
 			
